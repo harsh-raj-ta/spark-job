@@ -79,7 +79,7 @@ df.write.partitionBy('month','date').mode("overwrite").parquet("{}partition{}".f
 
 if i == 'Actives':
     s3 = boto.s3.connect_to_region('ap-southeast-2',
-        is_secure=True,               # uncomment if you are not using ssl
+        is_secure=True,               
         calling_format = boto.s3.connection.OrdinaryCallingFormat(),
         )
     my_bucket = s3.get_bucket('harsh-stagingbucket-batch08')
@@ -145,7 +145,7 @@ if i == 'Actives':
 
 if i == 'Viewership':
     s3 = boto.s3.connect_to_region('ap-southeast-2',
-        is_secure=True,               # uncomment if you are not using ssl
+        is_secure=True,               
         calling_format = boto.s3.connection.OrdinaryCallingFormat(),
         )
     my_bucket = s3.get_bucket('harsh-stagingbucket-batch08')
@@ -212,4 +212,4 @@ if i == 'Viewership':
 
 
 
-#did it got commitedcd
+#did it got commited?
