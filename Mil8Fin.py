@@ -51,14 +51,17 @@ class transform:
         allpresent = True
         for i in self.dec:
             if i['name'] in col:
+                allpresent = True
                 break
             else:
                 allpresent = False
-        for i in self.comma:
-            if i['name'] in col:
-                break
-            else:
-                allpresent = False
+        if allpresent:
+            for i in self.comma:
+                if i['name'] in col:
+                    allpresent = True
+                    break
+                else:
+                    allpresent = False
         return allpresent
     '''def export_to_staging(self,df,name):
         unique_month = df.select('month').distinct().collect()
