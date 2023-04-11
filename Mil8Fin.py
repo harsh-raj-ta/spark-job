@@ -46,6 +46,20 @@ class transform:
         for i in self.mask:
             df = df.withColumn(f"{i['name']}_mask", sha2(df[i['name']], 256))
         return df
+    def check_col(self,df):
+        col = df.columns
+        allpresent = True
+        for i in self.dec:
+            if i['name'] in col:
+                break
+            else:
+                allpresent = False
+        for i in self.comma:
+            if i['name'] in col:
+                break
+            else:
+                allpresent = False
+        return allpresent
     '''def export_to_staging(self,df,name):
         unique_month = df.select('month').distinct().collect()
         for i in unique_month:
@@ -65,6 +79,9 @@ i = a[:-len(x)]
 df = spark.read.parquet("{}{}.parquet".format(app.select('destination_raw.*').collect()[0]['path'],i))
 data_transform = app.select("used_key.*").collect()[0]
 obj = transform(data_transform['{}'.format(i)])
+all_col_present = obj.check_col(df)
+if not(all_col_present):
+    raise ValueError("Columns Not Present")
 df = obj.cast_dec(df)
 df = obj.cast_comma(df)
 df = obj.cast_mask(df)
@@ -79,7 +96,7 @@ df.write.partitionBy('month','date').mode("overwrite").parquet("{}partition{}".f
 
 if i == 'Actives':
     s3 = boto.s3.connect_to_region('ap-southeast-2',
-        is_secure=True,               
+        is_secure=True,               # uncomment if you are not using ssl
         calling_format = boto.s3.connection.OrdinaryCallingFormat(),
         )
     my_bucket = s3.get_bucket('harsh-stagingbucket-batch08')
@@ -145,7 +162,7 @@ if i == 'Actives':
 
 if i == 'Viewership':
     s3 = boto.s3.connect_to_region('ap-southeast-2',
-        is_secure=True,               
+        is_secure=True,               # uncomment if you are not using ssl
         calling_format = boto.s3.connection.OrdinaryCallingFormat(),
         )
     my_bucket = s3.get_bucket('harsh-stagingbucket-batch08')
@@ -212,4 +229,3 @@ if i == 'Viewership':
 
 
 
-#did it got commited?
